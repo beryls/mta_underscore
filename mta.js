@@ -25,56 +25,42 @@ var nStations = [ "Times Square", "34th", "28th and Broadway", "23rd and Broadwa
 var sixStations = [ "Grand Central", "33rd", "28th and Park", "23rd and Park", "Union Square", "Astor Place" ];
 var gStations = [ "Greenpoint", "Nassau", "Metropolitan", "Broadway" ];
 
-var lTrain = new Train('The L Train', lStations);
-var nTrain = new Train('The N Train', nStations);
-var sixTrain = new Train('The Six Train', sixStations);
-var gTrain = new Train('The G Train', gStations);
+var lTrain = new Train('N', lStations);
+var nTrain = new Train('L', nStations);
+var sixTrain = new Train('Six', sixStations);
+var gTrain = new Train('G', gStations);
 
 var trains = [lTrain, nTrain, sixTrain, gTrain];
 
-var msg = "Which train would you like to get on?\n" + displayLines();
-var startTrain = prompt(msg);
 
-
-var msg = "Which train would you like to get off?\n" + displayLines();
-var endTrain = prompt(msg);
 
 function displayLines() {
   var trainNames = "";
-  _.each(trains, function(train){
+  _.each(trains, function(train) {
     trainNames += train.name + "\n";
   });
   return trainNames.trim();
 }
 
-
-function forEach(array, func) {
-  for (var i = 0; i < array.length; i++) {
-    func(array[i]);
-  }
-}
-
-function map(array, func) {
-  var newArray = [];
-  for (var i = 0; i < array.length; i++) {
-    newArray.push(func(array[i]));
-  }
-  return newArray;
-}
-
 function displayStations(whatTrain) {
-  var train = null;
-  for (var j = 0; j < trains.length; j++) {
-    if (trains[j].name === whatTrain) {
-      train = trains[j];
-    }
-  }
-  var trainStations = "";
-  for (var k = 0; k < train.stations.length; k++) {
-    trainStations += train.stations[k] + "\n";
-  }
-  return trainStations.trim();
+  var train = _.findWhere(trains, {name: whatTrain});
+  // for (var j = 0; j < trains.length; j++) {
+  //   if (trains[j].name === whatTrain) {
+  //     train = trains[j];
+  //   }
+  // }
+  var stationNames = "";
+  _.each(train.stations, function(station) {
+    stationNames += station + "\n";
+  });
+  return stationNames.trim();
 }
+
+var msg = "Which train would you like to get on?\n" + displayLines();
+var startTrain = prompt(msg);
+
+var msg = "Which train would you like to get off?\n" + displayLines();
+var endTrain = prompt(msg);
 
 var msg2 = "Which station would you \nlike to get on?\n" + displayStations(startTrain);
 var startStation = prompt(msg2);
