@@ -20,42 +20,33 @@ Train.prototype.distance = function(board, exit) {
   return Math.abs(board - exit);
 };
 
-var lStations = [ "8th", "6th", "Union Square", "3rd", "1st" ];
-var nStations = [ "Times Square", "34th", "28th", "23rd", "Union Square", "8th" ];
-var sixStations = [ "Grand Central", "33rd", "28th", "23rd", "Union Square", "Astor Place" ];
+var lStations = [ "8th Ave", "6th", "Union Square", "3rd", "1st" ];
+var nStations = [ "Times Square", "34th", "28th and Broadway", "23rd and Broadway", "Union Square", "8th St" ];
+var sixStations = [ "Grand Central", "33rd", "28th and Park", "23rd and Park", "Union Square", "Astor Place" ];
 var gStations = [ "Greenpoint", "Nassau", "Metropolitan", "Broadway" ];
-var sStations = [ "Greenpoint", "Nassau", "Metropolitan", "Broadway" ];
 
 var lTrain = new Train('The L Train', lStations);
 var nTrain = new Train('The N Train', nStations);
 var sixTrain = new Train('The Six Train', sixStations);
 var gTrain = new Train('The G Train', gStations);
 
-var trains = [lTrain, nTrain, sixTrain, gTrain, sTrain];
-
-var msg = "Which train would you \nlike to get on?" + displayLines();
-var startTrain = prompt(msg);
-
 var trains = [lTrain, nTrain, sixTrain, gTrain];
 
-var msg = "Which train would you \nlike to get on?\n" + displayLines();
+var msg = "Which train would you like to get on?\n" + displayLines();
 var startTrain = prompt(msg);
+
+
+var msg = "Which train would you like to get off?\n" + displayLines();
+var endTrain = prompt(msg);
 
 function displayLines() {
   var trainNames = "";
-  for (var i = 0; i < trains.length; i++) {
-    trainNames += trains[i].name + "\n";
-  }
-
-  forEach(trains, trainName);
-
+  _.each(trains, function(train){
+    trainNames += train.name + "\n";
+  });
   return trainNames.trim();
 }
 
-
-function trainName(train){
-  return train.name + "\n"
-}
 
 function forEach(array, func) {
   for (var i = 0; i < array.length; i++) {
@@ -71,10 +62,10 @@ function map(array, func) {
   return newArray;
 }
 
-function displayStations() {
+function displayStations(whatTrain) {
   var train = null;
   for (var j = 0; j < trains.length; j++) {
-    if (trains[j].name === startTrain) {
+    if (trains[j].name === whatTrain) {
       train = trains[j];
     }
   }
@@ -85,5 +76,8 @@ function displayStations() {
   return trainStations.trim();
 }
 
-var msg2 = "Which station would you \nlike to get on?\n" + displayStations();
+var msg2 = "Which station would you \nlike to get on?\n" + displayStations(startTrain);
 var startStation = prompt(msg2);
+
+var msg2 = "Which station would you \nlike to get off?\n" + displayStations(endTrain);
+var endStation = prompt(msg2);
