@@ -25,13 +25,15 @@ var nStations = [ "Times Square", "34th", "28th and Broadway", "23rd and Broadwa
 var sixStations = [ "Grand Central", "33rd", "28th and Park", "23rd and Park", "Union Square", "Astor Place" ];
 var gStations = [ "Greenpoint", "Nassau", "Metropolitan", "Broadway" ];
 
-var lTrain = new Train('N', lStations);
-var nTrain = new Train('L', nStations);
+var lTrain = new Train('L', lStations);
+var nTrain = new Train('N', nStations);
 var sixTrain = new Train('Six', sixStations);
 var gTrain = new Train('G', gStations);
 
+var startTrain, endTrain, startStation, endStation;
 var trains = [lTrain, nTrain, sixTrain, gTrain];
-
+var numTrips = 0;
+var keepRiding = "y";
 
 
 function displayLines() {
@@ -51,24 +53,65 @@ function displayStations(whatTrain) {
   return stationNames.trim();
 }
 
-function switchStation(first, second) {
-  var train1 = _.findWhere(trains, {name: first});
-  var train2 = _.findWhere(trains, {name: second});
+function switchStation() {
+  var train1 = _.findWhere(trains, {name: startTrain});
+  var train2 = _.findWhere(trains, {name: endTrain});
   // return _.intersection(train1.stations, train2.stations);
   arr = _.intersection(train1.stations, train2.stations);
-  console.log(arr);
+  return arr;
 }
 
-var msg = "Which train would you like to get on?\n" + displayLines();
-var startTrain = prompt(msg);
 
-var msg = "Which train would you like to get off?\n" + displayLines();
-var endTrain = prompt(msg);
+function displayStops() {
+  var train1 = _.findWhere(trains, {name: startTrain});
+  var train2 = _.findWhere(trains, {name: endTrain});
+  if (train1 === train2) {
+    var numStops = (train1.distance(startStation, endStation));
+    console.log(numStops + " stops");
+    return numStops;
+  }
+  else {
+    // var start = indexOf(train1.startStation);
+    var intersections = switchStation();
+    if (intersections.length === 0) {
+      console.log("No intersection; you'll have to walk.");
+      return 0;
+    } else {
+      var numStops = train1.stations.length + train2.stations.length;
+      _.each(intersections, function(midStation) {
+        var totalStops = train1.distance(startStation, midStation) + train2.distance(midStation, endStation);
+        if (totalStops < numStops) {
+          numStops = totalStops;
+        }
+      });
+      console.log(numStops + " stops");
+      return numStops;
+    }
+  }
+}
 
-var msg2 = "Which station would you \nlike to get on?\n" + displayStations(startTrain);
-var startStation = prompt(msg2);
+function catchARide() {
+  var msg = "Which train would you like to get on?\n" + displayLines();
+  startTrain = prompt(msg);
 
-var msg2 = "Which station would you \nlike to get off?\n" + displayStations(endTrain);
-var endStation = prompt(msg2);
+  var msg = "Which train would you like to get off?\n" + displayLines();
+  endTrain = prompt(msg);
 
-switchStation(startTrain, endTrain);
+  var msg2 = "Which station would you like to get on?\n" + displayStations(startTrain);
+  startStation = prompt(msg2);
+
+  var msg2 = "Which station would you like to get off?\n" + displayStations(endTrain);
+  endStation = prompt(msg2);
+
+  var thisRide = displayStops();
+  if (thisRide > 0) {
+    numTrips++;
+  }
+
+  keepRiding = prompt("You have paid $" + numTrips * 2.5 + " in subway fares.\nWould you like to ride again? y/n");
+
+}
+
+while (keepRiding == "y") {
+  catchARide();
+}
