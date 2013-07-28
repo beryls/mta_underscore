@@ -44,16 +44,19 @@ function displayLines() {
 
 function displayStations(whatTrain) {
   var train = _.findWhere(trains, {name: whatTrain});
-  // for (var j = 0; j < trains.length; j++) {
-  //   if (trains[j].name === whatTrain) {
-  //     train = trains[j];
-  //   }
-  // }
   var stationNames = "";
   _.each(train.stations, function(station) {
     stationNames += station + "\n";
   });
   return stationNames.trim();
+}
+
+function switchStation(first, second) {
+  var train1 = _.findWhere(trains, {name: first});
+  var train2 = _.findWhere(trains, {name: second});
+  // return _.intersection(train1.stations, train2.stations);
+  arr = _.intersection(train1.stations, train2.stations);
+  console.log(arr);
 }
 
 var msg = "Which train would you like to get on?\n" + displayLines();
@@ -67,3 +70,5 @@ var startStation = prompt(msg2);
 
 var msg2 = "Which station would you \nlike to get off?\n" + displayStations(endTrain);
 var endStation = prompt(msg2);
+
+switchStation(startTrain, endTrain);
